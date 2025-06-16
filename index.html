@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Learning Hub</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary-brown: #8B6F47;
+            --dark-brown: #4A3728;
+            --light-brown: #D9C2A6;
+            --black: #1F1F1F;
+            --off-white: #F8F1E9;
+        }
+        body {
+            background: linear-gradient(135deg, var(--off-white) 0%, var(--light-brown) 100%);
+            min-height: 100vh;
+            font-family: 'Lato', sans-serif;
+            color: var(--black);
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Merriweather', serif;
+            color: var(--dark-brown);
+        }
+        .navbar {
+            background-color: var(--off-white);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .navbar-brand, .nav-link {
+            color: var(--dark-brown) !important;
+            font-weight: 600;
+        }
+        .nav-link:hover {
+            color: var(--primary-brown) !important;
+            transform: translateY(-2px);
+            transition: all 0.3s ease;
+        }
+        .card {
+            background-color: var(--off-white);
+            border: 1px solid var(--light-brown);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+            border-color: var(--primary-brown);
+        }
+        .btn-primary {
+            background-color: var(--primary-brown);
+            border-color: var(--primary-brown);
+            font-weight: 600;
+        }
+        .btn-primary:hover {
+            background-color: var(--dark-brown);
+            border-color: var(--dark-brown);
+            transform: translateY(-2px);
+            transition: all 0.3s ease;
+        }
+        .tutorial-content, .quiz-content {
+            display: none;
+            background-color: var(--off-white);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        .progress-bar {
+            background-color: var(--primary-brown);
+            transition: width 0.5s ease-in-out;
+        }
+        footer {
+            background-color: var(--dark-brown);
+            color: var(--off-white);
+        }
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .card {
+                margin-bottom: 20px;
+            }
+            h1.display-4 {
+                font-size: 2.5rem;
+            }
+            .lead {
+                font-size: 1rem;
+            }
+            .navbar-nav {
+                text-align: center;
+            }
+            .nav-link {
+                padding: 10px 0;
+            }
+        }
+        @media (max-width: 576px) {
+            .btn-lg {
+                font-size: 1rem;
+                padding: 8px 16px;
+            }
+            .card-body {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="#">Learning Hub</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#tutorials">Tutorials</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#quizzes">Quizzes</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="py-5 text-center">
+        <div class="container">
+            <h1 class="display-4 fw-bold mb-3">Interactive Learning Hub</h1>
+            <p class="lead mb-4">Embark on a journey of knowledge with step-by-step tutorials and engaging quizzes.</p>
+            <a href="#tutorials" class="btn btn-primary btn-lg">Start Learning</a>
+        </div>
+    </section>
+
+    <!-- Tutorials Section -->
+    <section id="tutorials" class="py-5 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-5">Step-by-Step Tutorials</h2>
+            <div class="row" id="tutorialList">
+                <!-- Tutorials will be dynamically added here -->
+            </div>
+            <div id="tutorialContent" class="tutorial-content mt-4"></div>
+        </div>
+    </section>
+
+    <!-- Quizzes Section -->
+    <section id="quizzes" class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-5">Challenge Your Knowledge</h2>
+            <div class="row" id="quizList">
+                <!-- Quizzes will be dynamically added here -->
+            </div>
+            <div id="quizContent" class="quiz-content mt-4">
+                <div id="quizQuestions"></div>
+                <button id="submitQuiz" class="btn btn-primary mt-3" style="display:none;">Submit Answers</button>
+                <div id="quizResult" class="mt-3"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="text-center py-4">
+        <p class="mb-0">© 2025 Interactive Learning Hub. All rights reserved.</p>
+    </footer>
+
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+    <!-- JavaScript Logic -->
+    <script>
+        // Expanded tutorials data
+        const tutorials = [
+            {
+                id: 1,
+                title: "JavaScript Basics",
+                description: "Master the fundamentals of JavaScript programming.",
+                content: `
+                    <h3>JavaScript Basics: Step-by-Step</h3>
+                    <p>JavaScript is a versatile language for web interactivity.</p>
+                    <h4>Step 1: Variables</h4>
+                    <p>Use <code>let</code>, <code>const</code>, or <code>var</code> to declare variables.</p>
+                    <pre><code>let name = "Learner";
+const age = 25;
+var score = 100;</code></pre>
+                    <h4>Step 2: Functions</h4>
+                    <p>Functions are reusable code blocks.</p>
+                    <pre><code>function greet(name) {
+    return "Hello, " + name;
+}
+console.log(greet("Learner"));</code></pre>
+                    <h4>Step 3: Events</h4>
+                    <p>Respond to user actions like clicks.</p>
+                    <pre><code>document.getElementById("myButton").addEventListener("click", () => {
+    alert("Button clicked!");
+});</code></pre>
+                    <div class="progress mt-3">
+                        <div class="progress-bar" role="progressbar" style="width: 0%;" id="progress-1">0%</div>
+                    </div>
+                    <button class="btn btn-primary mt-3" onclick="updateProgress(1, 100)">Complete Tutorial</button>
+                `
+            },
+            {
+                id: 2,
+                title: "CSS Fundamentals",
+                description: "Learn to style web pages with CSS.",
+                content: `
+                    <h3>CSS Fundamentals: Step-by-Step</h3>
+                    <p>CSS styles and layouts web content.</p>
+                    <h4>Step 1: Selectors</h4>
+                    <p>Target elements with selectors.</p>
+                    <pre><code>p {
+    color: blue;
+}
+.className {
+    font-size: 16px;
+}</code></pre>
+                    <h4>Step 2: Box Model</h4>
+                    <p>Understand margins, borders, and padding.</p>
+                    <pre><code>div {
+    margin: 10px;
+    padding: 15px;
+    border: 1px solid black;
+}</code></pre>
+                    <h4>Step 3: Flexbox</h4>
+                    <p>Create flexible layouts.</p>
+                    <pre><code>.container {
+    display: flex;
+    justify-content: space-between;
+}</code></pre>
+                    <div class="progress mt-3">
+                        <div class="progress-bar" role="progressbar" style="width: 0%;" id="progress-2">0%</div>
+                    </div>
+                    <button class="btn btn-primary mt-3" onclick="updateProgress(2, 100)">Complete Tutorial</button>
+                `
+            },
+            {
+                id: 3,
+                title: "JavaScript Arrays & Loops",
+                description: "Explore arrays and loops in JavaScript.",
+                content: `
+                    <h3>JavaScript Arrays & Loops: Step-by-Step</h3>
+                    <p>Work with collections and repetition.</p>
+                    <h4>Step 1: Arrays</h4>
+                    <p>Store multiple values in arrays.</p>
+                    <pre><code>let fruits = ["apple", "banana", "orange"];
+console.log(fruits[0]); // "apple"</code></pre>
+                    <h4>Step 2: For Loop</h4>
+                    <p>Iterate with a for loop.</p>
+                    <pre><code>for (let i = 0; i < fruits.length; i++) {
+    console.log(fruits[i]);
+}</code></pre>
+                    <h4>Step 3: Array Methods</h4>
+                    <p>Use methods like map and filter.</p>
+                    <pre><code>let upperFruits = fruits.map(fruit => fruit.toUpperCase());
+console.log(upperFruits); // ["APPLE", "BANANA", "ORANGE"]</code></pre>
+                    <div class="progress mt-3">
+                        <div class="progress-bar" role="progressbar" style="width: 0%;" id="progress-3">0%</div>
+                    </div>
+                    <button class="btn btn-primary mt-3" onclick="updateProgress(3, 100)">Complete Tutorial</button>
+                `
+            },
+            {
+                id: 4,
+                title: "Advanced CSS Layouts",
+                description: "Master CSS Grid and responsive design.",
+                content: `
+                    <h3>Advanced CSS Layouts: Step-by-Step</h3>
+                    <p>Create complex layouts with CSS.</p>
+                    <h4>Step 1: CSS Grid</h4>
+                    <p>Build grid-based layouts.</p>
+                    <pre><code>.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}</code></pre>
+                    <h4>Step 2: Media Queries</h4>
+                    <p>Make designs responsive.</p>
+                    <pre><code>@media (max-width: 600px) {
+    .grid-container {
+        grid-template-columns: 1fr;
+    }
+}</code></pre>
+                    <h4>Step 3: Positioning</h4>
+                    <p>Use relative and absolute positioning.</p>
+                    <pre><code>.relative {
+    position: relative;
+    top: 10px;
+}
+.absolute {
+    position: absolute;
+    top: 0;
+}</code></pre>
+                    <div class="progress mt-3">
+                        <div class="progress-bar" role="progressbar" style="width: 0%;" id="progress-4">0%</div>
+                    </div>
+                    <button class="btn btn-primary mt-3" onclick="updateProgress(4, 100)">Complete Tutorial</button>
+                `
+            }
+        ];
+
+        // Expanded quizzes data
+        const quizzes = [
+            {
+                id: 1,
+                title: "JavaScript Basics Quiz",
+                questions: [
+                    {
+                        question: "What is the correct syntax for declaring a variable in JavaScript?",
+                        options: ["var x = 5;", "variable x = 5;", "let = x 5;", "const x 5;"],
+                        answer: "var x = 5;"
+                    },
+                    {
+                        question: "Which method adds an element to the end of an array?",
+                        options: ["push()", "pop()", "shift()", "unshift()"],
+                        answer: "push()"
+                    },
+                    {
+                        question: "What does 'typeof' operator return for an array?",
+                        options: ["array", "object", "list", "collection"],
+                        answer: "object"
+                    },
+                    {
+                        question: "Which keyword declares a block-scoped variable?",
+                        options: ["var", "const", "global", "static"],
+                        answer: "const"
+                    }
+                ]
+            },
+            {
+                id: 2,
+                title: "CSS Fundamentals Quiz",
+                questions: [
+                    {
+                        question: "Which property changes text color?",
+                        options: ["color", "font-color", "text-color", "background-color"],
+                        answer: "color"
+                    },
+                    {
+                        question: "What does CSS stand for?",
+                        options: ["Cascading Style Sheets", "Creative Style Sheets", "Computer Style Sheets", "Colorful Style Sheets"],
+                        answer: "Cascading Style Sheets"
+                    },
+                    {
+                        question: "Which property aligns items in a flex container?",
+                        options: ["align-items", "justify-content", "flex-align", "item-align"],
+                        answer: "align-items"
+                    },
+                    {
+                        question: "What is the default value of the 'position' property?",
+                        options: ["static", "relative", "absolute", "fixed"],
+                        answer: "static"
+                    }
+                ]
+            },
+            {
+                id: 3,
+                title: "JavaScript Arrays & Loops Quiz",
+                questions: [
+                    {
+                        question: "Which method removes the last element from an array?",
+                        options: ["pop()", "push()", "shift()", "unshift()"],
+                        answer: "pop()"
+                    },
+                    {
+                        question: "What is the output of: ['a', 'b', 'c'].length?",
+                        options: ["3", "2", "4", "undefined"],
+                        answer: "3"
+                    },
+                    {
+                        question: "Which loop is used to iterate over object properties?",
+                        options: ["for...in", "for...of", "for", "while"],
+                        answer: "for...in"
+                    },
+                    {
+                        question: "Which method creates a new array with filtered elements?",
+                        options: ["filter()", "map()", "reduce()", "slice()"],
+                        answer: "filter()"
+                    }
+                ]
+            },
+            {
+                id: 4,
+                title: "Advanced CSS Quiz",
+                questions: [
+                    {
+                        question: "Which property defines the number of columns in a grid?",
+                        options: ["grid-template-columns", "grid-columns", "columns", "grid-column-count"],
+                        answer: "grid-template-columns"
+                    },
+                    {
+                        question: "What does 'vh' unit represent?",
+                        options: ["Viewport Height", "Vertical Height", "View Height", "Variable Height"],
+                        answer: "Viewport Height"
+                    },
+                    {
+                        question: "Which property makes an element sticky?",
+                        options: ["position: sticky", "position: fixed", "position: absolute", "position: relative"],
+                        answer: "position: sticky"
+                    },
+                    {
+                        question: "What is used to override default styles?",
+                        options: ["!important", "!override", "!priority", "!force"],
+                        answer: "!important"
+                    }
+                ]
+            }
+        ];
+
+        // Display tutorials
+        const tutorialList = document.getElementById('tutorialList');
+        tutorials.forEach(tutorial => {
+            const card = document.createElement('div');
+            card.className = 'col-md-6 col-lg-3 mb-4';
+            card.innerHTML = `
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">${tutorial.title}</h5>
+                        <p class="card-text">${tutorial.description}</p>
+                        <button class="btn btn-primary" onclick="showTutorial(${tutorial.id})">Start Tutorial</button>
+                    </div>
+                </div>
+            `;
+            tutorialList.appendChild(card);
+        });
+
+        // Display quizzes
+        const quizList = document.getElementById('quizList');
+        quizzes.forEach(quiz => {
+            const card = document.createElement('div');
+            card.className = 'col-md-6 col-lg-3 mb-4';
+            card.innerHTML = `
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">${quiz.title}</h5>
+                        <p class="card-text">Test your skills with this quiz!</p>
+                        <button class="btn btn-primary" onclick="showQuiz(${quiz.id})">Take Quiz</button>
+                    </div>
+                </div>
+            `;
+            quizList.appendChild(card);
+        });
+
+        // Show tutorial content
+        function showTutorial(id) {
+            const tutorial = tutorials.find(t => t.id === id);
+            const contentDiv = document.getElementById('tutorialContent');
+            contentDiv.innerHTML = tutorial.content;
+            contentDiv.style.display = 'block';
+            document.getElementById('quizContent').style.display = 'none';
+            window.scrollTo({ top: contentDiv.offsetTop, behavior: 'smooth' });
+        }
+
+        // Update tutorial progress
+        function updateProgress(id, percentage) {
+            const progressBar = document.getElementById(`progress-${id}`);
+            progressBar.style.width = `${percentage}%`;
+            progressBar.textContent = `${percentage}%`;
+        }
+
+        // Show quiz content
+        function showQuiz(id) {
+            const quiz = quizzes.find(q => q.id === id);
+            const questionsDiv = document.getElementById('quizQuestions');
+            questionsDiv.innerHTML = '';
+            quiz.questions.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'mb-4';
+                questionDiv.innerHTML = `
+                    <h5>${index + 1}. ${q.question}</h5>
+                    ${q.options.map((option, i) => `
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="q${index}" id="q${index}o${i}" value="${option}">
+                            <label class="form-check-label" for="q${index}o${i}">${option}</label>
+                        </div>
+                    `).join('')}
+                `;
+                questionsDiv.appendChild(questionDiv);
+            });
+            document.getElementById('submitQuiz').style.display = 'block';
+            document.getElementById('submitQuiz').onclick = () => submitQuiz(id);
+            document.getElementById('quizResult').innerHTML = '';
+            document.getElementById('quizContent').style.display = 'block';
+            document.getElementById('tutorialContent').style.display = 'none';
+            window.scrollTo({ top: questionsDiv.offsetTop, behavior: 'smooth' });
+        }
+
+        // Submit quiz and show results
+        function submitQuiz(id) {
+            const quiz = quizzes.find(q => q.id === id);
+            let score = 0;
+            quiz.questions.forEach((q, index) => {
+                const selected = document.querySelector(`input[name="q${index}"]:checked`);
+                if (selected && selected.value === q.answer) {
+                    score++;
+                }
+            });
+            const resultDiv = document.getElementById('quizResult');
+            const percentage = (score / quiz.questions.length) * 100;
+            resultDiv.innerHTML = `
+                <div class="alert alert-info">
+                    You scored ${score} out of ${quiz.questions.length} (${percentage.toFixed(2)}%)!
+                    ${percentage >= 75 ? "<p>Great job! You're mastering this topic.</p>" : '<p>Keep practicing to improve your score!</p>'}
+                </div>
+            `;
+            document.getElementById('submitQuiz').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
